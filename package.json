@@ -1,6 +1,6 @@
 {
 	"name": "@uwu/ash",
-	"version": "1.0.2",
+	"version": "1.1.0",
 	"description": "A TS framework that looks vagely like Elm from a distance.",
 	"main": "dist/index.js",
 	"module": "dist/index.js",

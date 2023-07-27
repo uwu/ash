@@ -78,7 +78,7 @@ but removes the benefit of keeping your precise update logic away from the view.
 
 ## `mount` and `unmount` hooks
 
-The `mount` and `unmount` hooks in Ash components are both passed the props and current state.
+The `mount` and `unmount` hooks in Ash components are both passed the same arguments as render.
 
 Calling them during a render looks like this:
  - If mounted, call `unmount()`, else do nothing

@@ -18,8 +18,18 @@ export type Component<TUpdates extends object, TState, TProps> = {
 		update: ProcessUpdates<TUpdates>,
 		mutate: (s?: TState) => void,
 	): Node | Node[];
-	mount?: (props: ProcessedProps<TProps>, state: TState) => undefined | (() => void);
-	unmount?: (props: ProcessedProps<TProps>, state: TState) => void;
+	mount?: (
+		props: ProcessedProps<TProps>,
+		state: TState,
+		update: ProcessUpdates<TUpdates>,
+		mutate: (s?: TState) => void,
+	) => undefined | (() => void);
+	unmount?: (
+		props: ProcessedProps<TProps>,
+		state: TState,
+		update: ProcessUpdates<TUpdates>,
+		mutate: (s?: TState) => void,
+	) => void;
 };
 
 export type ComponentConfig<TUpdates extends object, TState, TProps> =

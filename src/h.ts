@@ -40,7 +40,7 @@ function componentH<TProps extends object, TState>(
 
 		if (domnode) {
 			extraUnmount?.();
-			type.unmount?.(props, state);
+			type.unmount?.(props, state, updateHandlers, mutate as any);
 		}
 
 		const newNodeRaw = type.render(props, state, updateHandlers, mutate as any);
@@ -57,7 +57,7 @@ function componentH<TProps extends object, TState>(
 
 		domnode = newNode;
 
-		extraUnmount = type.mount?.(props, state);
+		extraUnmount = type.mount?.(props, state, updateHandlers, mutate as any);
 	}
 
 	render();
