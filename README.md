@@ -1,6 +1,6 @@
 # Ash
 
-A JS/TS UI framework that looks vaguely like Elm from a distance.
+A JS/TS UI framework that looks vaguely like [Elm](https://elm-lang.org) from a distance.
 
 Ash believes in one simple thing:
 the UI code need not be concerned with the precise detail of updating your state.
@@ -14,11 +14,11 @@ Ash is component-based, and you create an example component like this:
 const CounterBtn = ash.comp({
     state: (props) => props.init || 1,
     updates: {
-        incr: (state, amt = 1) => state + amt
+        incr: (props, state, amt = 1) => state + amt
     },
     render: (props, state, update) =>
-        ash.html`<button onClick=${() => update.incr(state)}>
-            ${state}
+        ash.html`<button onClick=${() => update.incr(3)}>
+            The count is ${state}
         </button>`
 });
 

@@ -1,15 +1,23 @@
 // utility
 type Optional<T, TKeys extends string | number | symbol> = Partial<T> & Omit<T, TKeys>;
 
-export type Component<TUpdates extends object, TState = {}, TProps = {}> = {
+// removes the `props` and `state` from an update function
+type ParamsFromUpdate<TUpdates> = TUpdates extends (props: any, state: any, ...p: (infer TP)) => any ? TP : never
+
+// removes the `props` and `state` from every function in the updates obj
+type ProcessUpdates<TIn extends object> = {
+	[p in keyof TIn]: (...args: ParamsFromUpdate<TIn[p]>) => ReturnType<TIn[p]>
+}
+
+export type Component<TUpdates extends object, TState, TProps> = {
   state(props: TProps): TState;
   updates: TUpdates;
-  render(props: ProcessedProps<TProps>, state: TState, update: TUpdates, mutate: (s?: TState) => void): Node;
+  render(props: ProcessedProps<TProps>, state: TState, update: ProcessUpdates<TUpdates>, mutate: (s?: TState) => void): Node;
 };
 
-export type ComponentConfig<TUpdates extends object, TState = {}> =
-  | Optional<Component<TUpdates, TState>, "state" | "updates">
-  | Component<TUpdates, TState>["render"];
+export type ComponentConfig<TUpdates extends object, TState, TProps> =
+  | Optional<Component<TUpdates, TState, TProps>, "state" | "updates">
+  | Component<TUpdates, TState, TProps>["render"];
 
 type OneChild = Node | string | number | boolean | null | undefined;
 export type Child = OneChild | OneChild[];

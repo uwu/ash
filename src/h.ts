@@ -21,8 +21,8 @@ function componentH<TProps extends object, TState>(
 	for (const update in type.updates) {
 		const originalHandler = (type.updates as Record<string, Function>)[update];
 
-		updateHandlers[update] = ((...props: unknown[]) => {
-			state = originalHandler(state, ...props);
+		updateHandlers[update] = ((...args: unknown[]) => {
+			state = originalHandler(props, state, ...args);
 			needsRerender = true;
 			queueMicrotask(render);
 		}) as any;
