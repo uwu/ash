@@ -12,17 +12,17 @@ Ash is component-based, and you create an example component like this:
 
 ```ts
 const CounterBtn = ash.comp({
-    state: (props) => 0,
+    state: (props) => props.init || 1,
     updates: {
-        incr: (state) => state + 1
+        incr: (state, amt = 1) => state + amt
     },
     render: (props, state, update) =>
-        ash.html`<button onClick=${update.incr}>
-            Increment from ${state}
+        ash.html`<button onClick=${() => update.incr(state)}>
+            ${state}
         </button>`
 });
 
-CounterBtn.mount(document.querySelector("#root"));
+document.querySelector("#root").append(ash.html`<${CounterBtn} />`);
 ```
 
 Every component has a state. The initial value of this is set in the component definition.
