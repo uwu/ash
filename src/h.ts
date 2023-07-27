@@ -1,20 +1,20 @@
-import {Child, Component, ProcessedProps} from "./types";
+import { Child, Component, ProcessedProps } from "./types";
 import htm from "htm/mini";
 
 const childToNode = (child: Child) => {
 	if (Array.isArray(child)) throw new Error("childToNode shouldn't be given an array.");
 	if (child instanceof Node) return child;
 	return new Text(child + "");
-}
+};
 
 function componentH<TProps extends object, TState>(
 	type: Component<object, TState, TProps>,
-	props: ProcessedProps<TProps>
+	props: ProcessedProps<TProps>,
 ): Node {
-
 	let needsRerender = true;
 	let state = type.state(props);
 	let domnode: Node;
+	let extraUnmount: undefined | (() => void);
 
 	const updateHandlers = {} as Record<string, Function>;
 
@@ -28,15 +28,20 @@ function componentH<TProps extends object, TState>(
 		}) as any;
 	}
 
-	const mutate = (...args: [] | [TState])  => {
+	const mutate = (...args: [] | [TState]) => {
 		if (args.length) state = args[0];
 		needsRerender = true;
 		queueMicrotask(render);
-	}
+	};
 
 	function render() {
 		if (!needsRerender) return;
 		needsRerender = false;
+
+		if (domnode) {
+			extraUnmount?.();
+			type.unmount?.(props, state);
+		}
 
 		const newNode = type.render(props, state, updateHandlers, mutate as any);
 
@@ -48,6 +53,8 @@ function componentH<TProps extends object, TState>(
 		}
 
 		domnode = newNode;
+
+		extraUnmount = type.mount?.(props, state);
 	}
 
 	render();
@@ -68,8 +75,8 @@ export function h<TProps extends object, TState>(
 		for (const prop in props) {
 			const val = props[prop] as any;
 
-			if (prop === "children") {}
-			else if (prop.startsWith("on")) {
+			if (prop === "children") {
+			} else if (prop.startsWith("on")) {
 				const evName = prop[2].toLowerCase() + prop.slice(3);
 				elem.addEventListener(evName, val);
 			} else if (prop === "style") {
@@ -85,7 +92,7 @@ export function h<TProps extends object, TState>(
 		return elem;
 	}
 
-	return componentH(type, {...props, children: processedChildren});
+	return componentH(type, { ...props, children: processedChildren });
 }
 
 export const html = htm.bind(h);

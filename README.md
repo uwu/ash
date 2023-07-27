@@ -75,3 +75,24 @@ without fear of Ash assuming that you've already mutated an object state :)
 This imperative programming style may be more comfortable to some,
 and is nice for simple components,
 but removes the benefit of keeping your precise update logic away from the view.
+
+## `mount` and `unmount` hooks
+
+The `mount` and `unmount` hooks in Ash components are both passed the props and current state.
+
+Calling them during a render looks like this:
+ - If mounted, call `unmount()`, else do nothing
+ - Call `render()` to get the new dom nodes to use
+ - If mounted, remove the old nodes from the document
+ - Add new node to the document
+ - Call `mount()`
+
+So when a rerender happens, unmount will be hit first, then render, then mount.
+
+You can also return a function from `mount()` to call it before the next `unmount()`
+automatically.
+This will only happen the next time, and is optional.
+It is useful for cleaning up subscriptions, etc.
+
+Be careful, these are very noisy functions, adding handlers here handling, eg,
+mouse events is an easy way to make performance issues.
