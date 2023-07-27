@@ -16,5 +16,3 @@ export const comp = <
       };
 
 export {h, html} from "./h";
-
-export {mount} from "./mount";

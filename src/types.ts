@@ -15,11 +15,3 @@ type OneChild = Node | string | number | boolean | null | undefined;
 export type Child = OneChild | OneChild[];
 
 export type ProcessedProps<T> = T & {children: Node[]}
-
-export type Elem<TState, TProps, TUpdates extends object = {}> = {
-  comp: Component<TUpdates, TState, TProps>;
-  mount: Node;
-  state: TState;
-  props: ProcessedProps<TProps>;
-  needsRerender: boolean;
-};
