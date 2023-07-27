@@ -43,7 +43,10 @@ function componentH<TProps extends object, TState>(
 			type.unmount?.(props, state);
 		}
 
-		const newNode = type.render(props, state, updateHandlers, mutate as any);
+		const newNodeRaw = type.render(props, state, updateHandlers, mutate as any);
+
+		// TODO: i am not a fan of this, and intend to add proper support for returning multiple elements later.
+		const newNode = Array.isArray(newNodeRaw) ? newNodeRaw[0] : newNodeRaw;
 
 		if (domnode) {
 			const sibling = domnode.nextSibling;
