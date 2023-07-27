@@ -1,21 +1,25 @@
 // utility
 type Optional<T, TKeys extends string | number | symbol> = Partial<T> & Omit<T, TKeys>;
 
-export type Component<TUpdates, TState = {}, TProps = {}> = {
+export type Component<TUpdates extends object, TState = {}, TProps = {}> = {
   state(props: TProps): TState;
   updates: TUpdates;
-  render(props: TProps, state: TState, update: TUpdates, mutate: (s?: TState) => void): Node;
+  render(props: ProcessedProps<TProps>, state: TState, update: TUpdates, mutate: (s?: TState) => void): Node;
 };
 
-export type ComponentConfig<TUpdates, TState = {}> =
+export type ComponentConfig<TUpdates extends object, TState = {}> =
   | Optional<Component<TUpdates, TState>, "state" | "updates">
   | Component<TUpdates, TState>["render"];
 
 type OneChild = Node | string | number | boolean | null | undefined;
 export type Child = OneChild | OneChild[];
 
-export type Elem<TState, TProps> = {
-  comp: Component<unknown, TState, TProps>;
+export type ProcessedProps<T> = T & {children: Node[]}
+
+export type Elem<TState, TProps, TUpdates extends object = {}> = {
+  comp: Component<TUpdates, TState, TProps>;
   mount: Node;
   state: TState;
+  props: ProcessedProps<TProps>;
+  needsRerender: boolean;
 };
